@@ -29,7 +29,7 @@ const devServer = {
 const moduleConfig = {
   rules: [
     {
-      test: entry,
+      test: entry, // 入口起点(entry point)
       loader: 'expose-loader',
       options: { exposes: 'itkVtkViewer' },
     },
@@ -57,7 +57,8 @@ module.exports = [
     name: 'itkVtkViewer.js progressive web app',
     module: moduleConfig,
     output: {
-      filename: 'itkVtkViewer.js',
+      // 其他生成文件默认放置在 ./dist 文件夹中。
+      filename: 'itkVtkViewer.js', // output 属性告诉 webpack 在哪里输出它所创建的 bundle
     },
     resolve: {
       fallback: { fs: false, stream: require.resolve('stream-browserify') },
