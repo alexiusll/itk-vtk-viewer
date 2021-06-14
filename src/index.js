@@ -1,3 +1,9 @@
+/*
+ * @Author: linkenzone
+ * @Date: 2021-06-14 22:25:11
+ * @Descripttion: 入口
+ */
+
 import axios from 'axios'
 
 import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract'
@@ -39,6 +45,12 @@ export async function createViewerFromFiles(el, files, use2D = false) {
   return processFiles(el, { files: files, use2D })
 }
 
+/**
+ * 核心函数 创建 viewer
+ * @description:
+ * @param {*}
+ * @return {*}
+ */
 export async function createViewerFromUrl(
   el,
   {
@@ -51,7 +63,9 @@ export async function createViewerFromUrl(
     use2D = false,
   }
 ) {
+  // el 下的子元素
   UserInterface.emptyContainer(el)
+  // 设置 进度条
   const progressCallback = UserInterface.createLoadingProgress(el)
 
   let imageObject = null
@@ -170,35 +184,61 @@ export function initializeEmbeddedViewers() {
   }
 }
 
+/**
+ * @description: 首先执行的函数
+ * 过程URL参数
+ * @param {*} container
+ * @param {*} addOnParameters
+ * @return {*}
+ */
 export function processURLParameters(container, addOnParameters = {}) {
+  // 获得配置参数
   const userParams = Object.assign(
     {},
     vtkURLExtract.extractURLParameters(),
     addOnParameters
   )
+  console.log('userParams', userParams)
+  // 输出示例  {fullscreen: true}
+
+  // 获取底座 的 Dom 元素
   const myContainer = UserInterface.getRootContainer(container)
 
+  // 1.是否全屏显示
   if (userParams.fullscreen) {
+    // 给 DOM元素新增 class ==> style.fullscreenContainer
     myContainer.classList.add(style.fullscreenContainer)
   }
 
+  // 2.需要引入的 文件
   let filesToLoad = []
+  // 尝试从 userParams 来获取文件列表
   if (userParams.fileToLoad) {
     filesToLoad = userParams.fileToLoad.split(',')
   }
   if (userParams.filesToLoad) {
     filesToLoad = userParams.filesToLoad.split(',')
   }
+  console.log('filesToLoad', filesToLoad)
+  // 第一次进入时 应该为 []
+
+  // 3.尝试获取 rotate
   let rotate = true
   if (typeof userParams.rotate !== 'undefined') {
     rotate = userParams.rotate
   }
+
+  // 4.尝试获取 config
   let config = null
   if (typeof userParams.config !== 'undefined') {
     config = userParams.config
   }
+  console.log('rotate', rotate)
+  console.log('config', config)
 
+  //  如果存在文件的话，直接创建 viewer
   if (filesToLoad.length || userParams.image || userParams.labelImage) {
+    console.log('createViewerFromUrl', createViewerFromUrl)
     return createViewerFromUrl(myContainer, {
       files: filesToLoad,
       image: userParams.image,
@@ -209,6 +249,7 @@ export function processURLParameters(container, addOnParameters = {}) {
       use2D: !!userParams.use2D,
     })
   }
+  // 不存在的时候 返回 null
   return null
 }
 
