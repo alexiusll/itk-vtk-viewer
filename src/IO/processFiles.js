@@ -150,6 +150,8 @@ export const readFiles = async ({
       return { is3D, data: itkImage }
     })
     const dataSets = await Promise.all(readers)
+    console.log('processFiles::dataSets', dataSets)
+
     const images = dataSets
       .filter(({ data }) => !!data && data.imageType !== undefined)
       .map(({ data }) => data)
@@ -218,6 +220,12 @@ export const readFiles = async ({
     let any3D = !dataSets.map(({ is3D }) => is3D).every(is3D => !is3D)
     any3D = !!image ? any3D || image.imageType.dimension === 3 : any3D
     any3D = !!labelImage ? any3D || labelImage.imageType.dimension === 3 : any3D
+
+    console.log('processFiles:image', image)
+    console.log('processFiles:labelImage', labelImage)
+    console.log('processFiles:labelImageNameData', labelImageNameData)
+    console.log('processFiles:geometries', geometries)
+    console.log('processFiles:pointSets', pointSets)
 
     return {
       image,

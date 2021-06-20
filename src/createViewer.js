@@ -241,6 +241,7 @@ const createViewer = async (
       let initialRender = false
       if (!!!store.imageUI.representationProxy) {
         initialRender = true
+        console.log('fusedImage1', fusedImage)
         store.imageUI.source.setInputData(fusedImage)
 
         proxyManager.createRepresentationInAllViews(store.imageUI.source)
@@ -297,6 +298,7 @@ const createViewer = async (
         }
         updatingImage = true
 
+        console.log('fusedImage2', fusedImage)
         store.imageUI.source.setInputData(fusedImage)
 
         updateVolumeProperties(store)
@@ -352,6 +354,8 @@ const createViewer = async (
     }
   )
   let imageName = null
+
+  console.log('createViewer::image', image)
   if (image) {
     const multiscaleImage = await toMultiscaleChunkedImage(image)
     imageName = multiscaleImage.name
@@ -406,12 +410,14 @@ const createViewer = async (
       }
       if (!!multiscaleLabelMap) {
         const topLevelImage = await multiscaleLabelMap.topLevelLargestImage()
+        console.log('createViewer::imageData', imageData)
         const imageData = vtkITKHelper.convertItkToVtkImage(topLevelImage)
         store.imageUI.labelMap = imageData
         updateVisualizedComponents(store)
       }
       if (!!multiscaleImage) {
         const topLevelImage = await multiscaleImage.topLevelLargestImage()
+        console.log('createViewer::imageData', imageData)
         const imageData = vtkITKHelper.convertItkToVtkImage(topLevelImage)
         store.imageUI.image = imageData
         updateVisualizedComponents(store)
@@ -447,6 +453,7 @@ const createViewer = async (
             }
           )
           store.geometriesUI.sources.push(geometrySource)
+          console.log('geometry1', geometry)
           store.geometriesUI.sources[index].setInputData(geometry)
           proxyManager.createRepresentationInAllViews(geometrySource)
           const geometryRepresentation = proxyManager.getRepresentation(
@@ -455,6 +462,7 @@ const createViewer = async (
           )
           store.geometriesUI.representationProxies.push(geometryRepresentation)
         } else {
+          console.log('geometry2', geometry)
           store.geometriesUI.sources[index].setInputData(geometry)
           store.geometriesUI.representationProxies[index].setVisibility(true)
         }
@@ -510,6 +518,7 @@ const createViewer = async (
             }
           )
           store.pointSetsUI.sources.push(pointSetSource)
+          console.log('pointSet1', pointSet)
           store.pointSetsUI.sources[index].setInputData(pointSet)
           const pointSetRepresentationUid = `pointSetRepresentation${index}`
           const pointSetRepresentation = proxyManager.createProxy(
@@ -526,6 +535,7 @@ const createViewer = async (
           store.itkVtkView.addRepresentation(pointSetRepresentation)
           store.pointSetsUI.representationProxies.push(pointSetRepresentation)
         } else {
+          console.log('pointSet2', pointSet)
           store.pointSetsUI.sources[index].setInputData(pointSet)
           store.pointSetsUI.representationProxies[index].setVisibility(true)
         }

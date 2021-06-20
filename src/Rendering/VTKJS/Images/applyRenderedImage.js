@@ -26,10 +26,13 @@ function applyRenderedImage(context, event) {
   const editorLabelImage = actorContext.editorLabelImage
   const numberOfComponents = image ? image.imageType.components : 0
 
+  console.log('actorContext.fusedImage', actorContext.fusedImage)
   context.images.source.setInputData(actorContext.fusedImage)
 
   // VTK.js currently only supports a single image
   if (!!!context.images.representationProxy) {
+    console.log('context.images.source', context.images.source)
+
     context.proxyManager.createRepresentationInAllViews(context.images.source)
     context.images.representationProxy = context.proxyManager.getRepresentation(
       context.images.source,
@@ -42,6 +45,11 @@ function applyRenderedImage(context, event) {
     } else {
       context.itkVtkView.setViewMode('Volume')
     }
+
+    console.log(
+      'actorContext.volumeSampleDistance',
+      actorContext.volumeSampleDistance
+    )
 
     context.images.representationProxy.getMapper().setMaximumSamplesPerRay(2048)
     context.images.representationProxy.setSampleDistance(
