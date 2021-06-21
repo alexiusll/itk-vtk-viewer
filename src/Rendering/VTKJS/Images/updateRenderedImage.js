@@ -35,7 +35,10 @@ async function updateRenderedImage(context) {
 
   // Construct the fused image
   if (image && !labelImage && !editorLabelImage) {
+    console.log('actorContext.renderedScale', actorContext.renderedScale)
     const scaleImage = await image.scaleLargestImage(actorContext.renderedScale)
+
+    console.log('updateRenderedImage4::scaleImage', scaleImage)
     actorContext.fusedImage = vtkITKHelper.convertItkToVtkImage(scaleImage)
 
     actorContext.renderedImage = scaleImage
@@ -43,6 +46,7 @@ async function updateRenderedImage(context) {
   } else if (image) {
     const scaleImage = await image.scaleLargestImage(actorContext.renderedScale)
     actorContext.renderedImage = scaleImage
+    console.log('updateRenderedImage1::scaleImage', scaleImage)
     const vtkImage = vtkITKHelper.convertItkToVtkImage(scaleImage)
 
     const imageScalars = vtkImage.getPointData().getScalars()
@@ -50,6 +54,7 @@ async function updateRenderedImage(context) {
     const imageComponents = imageScalars.getNumberOfComponents()
 
     if (!actorContext.fusedImage) {
+      console.log('updateRenderedImage2::scaleImage', scaleImage)
       actorContext.fusedImage = vtkITKHelper.convertItkToVtkImage(scaleImage)
     }
     const fusedImage = actorContext.fusedImage
@@ -168,6 +173,7 @@ async function updateRenderedImage(context) {
       actorContext.renderedScale
     )
     actorContext.renderedLabelImage = scaleLabelImage
+    console.log('updateRenderedImage3::scaleImage', scaleImage)
     actorContext.fusedImage = vtkITKHelper.convertItkToVtkImage(scaleLabelImage)
 
     const uniqueLabelsSet = new Set(actorContext.renderedLabelImage.data)

@@ -186,8 +186,7 @@ export const readFiles = async ({
     })
 
     const dataSets = await Promise.all(readers)
-
-    console.log('dataSets', dataSets)
+    console.log('processFiles::dataSets', dataSets)
 
     const images = dataSets
       .filter(({ data }) => !!data && data.imageType !== undefined)
@@ -270,6 +269,11 @@ export const readFiles = async ({
     console.log('pointSets', pointSets)
 
     console.log('------end [readFiles]------')
+    console.log('processFiles:image', image)
+    console.log('processFiles:labelImage', labelImage)
+    console.log('processFiles:labelImageNameData', labelImageNameData)
+    console.log('processFiles:geometries', geometries)
+    console.log('processFiles:pointSets', pointSets)
 
     return {
       image,
