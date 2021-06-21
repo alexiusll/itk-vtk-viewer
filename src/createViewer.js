@@ -28,6 +28,11 @@ import ViewerMachineContext from './Context/ViewerMachineContext'
 
 import { autorun, observable, reaction, toJS } from 'mobx'
 
+/**
+ * @description: 核心 创建 viewer
+ * @param {*}
+ * @return {*}
+ */
 const createViewer = async (
   rootContainer,
   {
@@ -41,18 +46,33 @@ const createViewer = async (
     config,
   }
 ) => {
+  console.log('------ 创建 viewer ------')
+  // 判断 root Dom 是否为空
   UserInterface.emptyContainer(rootContainer)
+  // 判断是否能价值 webGl
   if (!UserInterface.checkForWebGL(rootContainer)) {
     throw new Error('WebGL could not be loaded.')
   }
 
+  console.log('proxyConfiguration', proxyConfiguration)
+
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration })
+  console.log(
+    'vtkProxyManager.newInstance({ proxyConfiguration }) == >',
+    proxyManager
+  )
+
+  // 重新设置 窗口大小
   window.addEventListener('resize', proxyManager.resizeAllViews)
 
+  // 储存数据
   const store = new ViewerStore(proxyManager)
+  console.log('ViewerStore(proxyManager)', store)
 
+  //api
   const publicAPI = {}
 
+  // 是否开启调试
   const debug = false
   if (debug) {
     //const stateIFrame = document.createElement('iframe')

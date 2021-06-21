@@ -36,6 +36,11 @@ export { utils }
 export { UserInterface }
 
 /** Returns a Promise that revolves with the Viewer created the files. */
+/**
+ * @description: 核心方法 createViewerFromLocalFiles
+ * @param {*} container
+ * @return {*}
+ */
 export function createViewerFromLocalFiles(container) {
   doNotInitViewers = true
   return createFileDragAndDrop(container, processFiles)
@@ -67,9 +72,11 @@ export async function createViewerFromUrl(
   UserInterface.emptyContainer(el)
   // 设置 进度条
   const progressCallback = UserInterface.createLoadingProgress(el)
-
+  // 图片对象
   let imageObject = null
+  // “!!” ——两个叹号表示把目标值转化为布尔值，相当于使用Boolean()方法
   if (!!image) {
+    // 获取文件的后缀名
     const extension = getFileExtension(image)
     if (extension === 'zarr') {
       imageObject = await toMultiscaleChunkedImage(new URL(image))
@@ -85,6 +92,7 @@ export async function createViewerFromUrl(
     }
   }
 
+  // label图片对象
   let labelImageObject = null
   if (!!labelImage) {
     const extension = getFileExtension(labelImage)
@@ -104,6 +112,9 @@ export async function createViewerFromUrl(
       labelImageObject = result.image
     }
   }
+
+  console.log('imageObject', imageObject)
+  console.log('labelImageObject', labelImageObject)
 
   const fileObjects = []
   for (const url of files) {
